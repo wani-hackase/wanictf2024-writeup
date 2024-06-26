@@ -1,0 +1,14 @@
+VERSION 0.7
+FROM buildpack-deps:bookworm
+WORKDIR /builder-workdir
+
+build:
+	RUN apt-get update && \
+      apt-get install -y nasm && \
+      rm -rf /var/lib/apt/lists/*
+
+	COPY example.asm .
+	RUN nasm -f elf64 example.asm && \
+      ld --strip-all -o example example.o
+
+	SAVE ARTIFACT example AS LOCAL .

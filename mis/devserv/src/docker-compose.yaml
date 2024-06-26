@@ -1,0 +1,8 @@
+services:
+  devserv:
+    build: .
+    init: true
+    restart: unless-stopped
+    ports:
+      - "22:22"
+      - "6867:6867"

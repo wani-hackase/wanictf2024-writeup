@@ -1,0 +1,19 @@
+services:
+  toybox-socket:
+    build: ./socket
+    init: true
+    restart: unless-stopped
+    volumes:
+      - "data:/workdir/data:ro"
+    ports:
+      - "9893:9893"
+  toybox-web:
+    build: ./web
+    restart: unless-stopped
+    volumes:
+      - "data:/workdir/data"
+    ports:
+      - "1850:1850"
+
+volumes:
+  data:

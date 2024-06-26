@@ -1,0 +1,20 @@
+services:
+  elec:
+    build: .
+    restart: unless-stopped
+    environment:
+      PORT: 1323
+      DB_PATH: /home/elec/data/db.sqlite3
+    volumes:
+      - data:/home/elec/data
+    ports:
+      - 1323:1323
+    # make xvfb-run exit immediately on SIGTERM
+    init: true
+    security_opt:
+      # allow chromium to run in the container
+      # source: https://github.com/microsoft/playwright/blob/ae935a43d9e376e4759548f6b3c6905c7b282333/utils/docker/seccomp_profile.json
+      - seccomp:seccomp_profile.json
+
+volumes:
+  data:

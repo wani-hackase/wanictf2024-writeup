@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<form method="post">
+  <div>
+    <label>userid
+      <input type="text" name="userid" />
+    </label>
+  </div>
+  <div>
+    <label>password
+      <input type="password" name="password" />
+    </label>
+  </div>
+  <p style="color:red">{{ . }}</p>
+  <input type="hidden" name="ldap_url" value="ldap://localhost" />
+  <input type="submit" value="sign in" />
+</form>

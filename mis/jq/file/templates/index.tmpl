@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>JQ Playground</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+
+<body>
+  <div class="container">
+    <section class="hero">
+      <div class="hero-body">
+        <p class="title">JQ Playground</p>
+      </div>
+    </section>
+    <section class="px-5">
+      <form method="POST" action="/">
+        <div class="field is-horizontal">
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <input class="input" type="text" name="filter" placeholder="filter (e.g. .users[].name)">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="control">
+          <button type="submit" class="button is-link">Send</button>
+        </div>
+      </form>
+      <div class="mt-3">
+        {% if contents is defined and contents != "" %}
+        <pre>
+<code>
+{{ contents }}
+</code>
+        </pre>
+        {% endif %}
+        {% if error is defined and error != "" %}
+        <pre>
+<code>
+{{ error }}
+</code>
+        </pre>
+        {% endif %}
+      </div>
+    </section>
+  </div>
+</body>
+
+</html>

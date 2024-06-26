@@ -1,0 +1,19 @@
+services:
+  app:
+    build: ./app
+    ports:
+      - "8080:8080"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+  crawler:
+    build: ./crawler
+    environment:
+      - FLAG=FAKE{***redacted***}
+      - APP_URL=http://app:8080
+      - HOST=app:8080
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    platform: linux/amd64
+  redis:
+    image: "redis:alpine"

@@ -1,0 +1,3 @@
+/obfuscator/build/bin/clang -c flag.c -mllvm -sub -mllvm -fla -mllvm -bcf -fPIE
+
+# https://github.com/obfuscator-llvm/obfuscator

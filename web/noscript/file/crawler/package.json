@@ -1,0 +1,16 @@
+{
+  "name": "crawler",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "hi120ki",
+  "license": "MIT",
+  "description": "",
+  "dependencies": {
+    "ioredis": "^5.4.1",
+    "playwright": "^1.44.1",
+    "uuid": "^10.0.0"
+  }
+}

@@ -1,0 +1,8 @@
+services:
+  server:
+    build:
+      context: .
+    init: true
+    restart: unless-stopped
+    ports:
+      - 8000:8000

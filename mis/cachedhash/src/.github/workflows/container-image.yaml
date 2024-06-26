@@ -1,0 +1,37 @@
+name: Build and push container image
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-push:
+    concurrency:
+      group: container-image
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: us-east-1
+
+      - id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          registry-type: public
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: '{{defaultContext}}:src'
+          tags: ${{ vars.ECR_PUBLIC_REPOSITORY }}:latest
+          push: true
+          provenance: false
+          cache-from: type=registry,ref=${{ vars.ECR_PUBLIC_REPOSITORY }}:cache
+          cache-to: type=registry,mode=max,ref=${{ vars.ECR_PUBLIC_REPOSITORY }}:cache,image-manifest=true,oci-mediatypes=true

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User profile</title>
+  </head>
+
+  <body>
+    <a href="/">Home</a>
+    <p>
+      This page is protected by csp `default-src 'self', script-src 'none'`.
+    </p>
+    <p>Can you xss me in this page to steal the user's cookie?</p>
+    <p>Username : {{ .username }}</p>
+    <p>Profile : {{ .profile }}</p>
+    <form action="/user/{{ .id }}" method="post">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" size="120" required />
+      <br />
+      <label for="profile">Profile:</label>
+      <input type="profile" id="profile" name="profile" size="120" required />
+      <br />
+      <button type="submit">Update</button>
+    </form>
+  </body>
+</html>

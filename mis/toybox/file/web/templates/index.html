@@ -1,0 +1,22 @@
+{{define "index"}}
+<!doctype html>
+<header aria-label="Toybox">
+<pre>
+ _____           _
+|_   _|__  _   _| |__   _____  __
+  | |/ _ \| | | | '_ \ / _ \ \/ /
+  | | (_) | |_| | |_) | (_) >  <
+  |_|\___/ \__, |_.__/ \___/_/\_\
+           |___/
+</pre>
+</header>
+<p>super secure sandbox</p>
+<form action="/upload" method="post" enctype="multipart/form-data">
+  <div>
+    <label>executable file
+      <input type="file" name="file" />
+    </label>
+  </div>
+  <input type="submit" value="Upload!" />
+</form>
+{{end}}

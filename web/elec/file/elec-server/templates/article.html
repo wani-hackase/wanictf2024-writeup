@@ -1,0 +1,27 @@
+{{define "article"}}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ .Title }} - Blog</title>
+  {{template "bs-css"}}
+  {{template "bs-js"}}
+</head>
+<body>
+  {{template "navbar"}}
+  <div class="container">
+    <h1 class="mb-3">{{ .Title }}</h1>
+    <div id="content" class="mb-3"></div>
+    <form method="post" action="/report/{{ .ID }}">
+      <button type="submit" class="btn btn-secondary">Report</button>
+    </form>
+  </div>
+  {{template "admin-footer"}}
+  <script type="module">
+    import sanitizeHtml from 'https://esm.sh/sanitize-html@2.11.0'
+    document.getElementById("content").innerHTML = sanitizeHtml({{ .Content }}, {allowedTags: ["p", "br", "hr", "a", "img", "blockquote", "ul", "ol", "li"],allowedAttributes: {'*':['*']}})
+  </script>
+</body>
+</html>
+{{end}}

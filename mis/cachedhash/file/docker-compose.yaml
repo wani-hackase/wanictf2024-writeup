@@ -1,0 +1,7 @@
+services:
+  cachedhash:
+    image: public.ecr.aws/s8s0z7v7/r39cvpwh:latest
+    build: .
+    restart: unless-stopped
+    ports:
+      - "5089:5089"

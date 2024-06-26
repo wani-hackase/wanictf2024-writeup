@@ -1,0 +1,6 @@
+{{define "upload"}}
+<!DOCTYPE html>
+<p>Upload completed. Run the following command to start a sandbox.</p>
+<p><code>nc {{ .SocketHost }} {{ .SocketPort }}</code></p>
+<p>ID: <code>{{ .Id }}</code></p>
+{{end}}
