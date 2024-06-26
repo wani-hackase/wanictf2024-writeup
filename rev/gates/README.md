@@ -249,3 +249,84 @@ void FUN_00101240(void)
 
 It looks far more readable now. What remains is a simple reversing problem: we have a bunch of equations which are all solvable (1 of the operands and the result is always known, if the system is solved backwards), so just solve them. The explanation for the remaining part will be skipped. And thus we get the flag `FLAG{INTr0dUction_70_R3v3R$1NG1}`.  
 最初よりだいぶ読みやすくなった。残りは簡単なリバーシング問題である。解きやすい方程式の組があって（後ろから解いて行くと、1つのオペランドと計算結果が既知なので）、それを解けばいい。なので、残りの説明は割愛する。解いていくと `FLAG{INTr0dUction_70_R3v3R$1NG1}` が出てくる。
+
+---
+
+Since someone asked me to explain the remaining part I guess I will write it...  
+残りの解き方を説明してほしい方がいたので書きます...
+
+The better way to solve the problem is to use a Z3 solver. The way that would only work for this question, is that we can reverse all operations. The content of `memory` below can be obtained by choosing the struct array in Ghidra and right click → `Copy Special` → `C Array`. The remaining of the solve script should be fairly easy to understand, apart from that I failed to reset the `finished` value in the memory of the entries not yet calculated 😅  
+Z3 ソルバーとか使って解いたほうがいいと思うが、今回しか使えない解法は説明する。今回で使った操作は全部可逆なので、逆を計算すればよい。下のスクリプトの `memory` は Ghidra で構造体の配列を選択して、右クリック → `Copy Special` → `C Array` で取れます。残りのスクリプトはかなりわかりやすいと思う - ただし今回出題するときまだ計算してないところの `finished` をちゃんと 0 に戻すの忘れてた 😅
+
+The full solve script to get the flag is as belows.  
+フラグが出るまでのスクリプトは以下である。
+
+```c
+#include <stdio.h>
+#include <stdbool.h>
+
+typedef struct Struct {
+    int type;
+    int index1;
+    int index2;
+    bool finished;
+    char result;
+    char _unused;
+    char _unused2;
+} Struct;
+
+char memory[] = { /* Omitted; copy from Ghidra */ };
+char memory2[] = { 0x3b, 0x09, 0xe5, 0xae, 0x3e, 0xf1, 0x37, 0x81, 0xfc, 0xa1, 0x99, 0xae, 0xf7, 0x62, 0x7d, 0xf7, 0xd0, 0xcb, 0xa2, 0x18, 0xcd, 0x3e, 0x89, 0x0d, 0xd9, 0xdd, 0x62, 0x29, 0x8c, 0xf3, 0x01, 0xec };
+
+char reverse(int type, char value, char result) {
+    if (type == 3) {
+        return result ^ value;
+    } else if (type == 2 || type == 1) {
+        return result - value;
+    } else {
+        printf("Unexpected\n");
+    }
+} 
+
+int main() {
+    Struct *structs = (Struct*)((void*)memory);
+
+    int start = 0xe0;
+    
+    for (int i = start; i < start + 0x20; i++) {
+        structs[i].finished = true;
+        structs[i].result = memory2[i - start];
+    }
+
+    while (true) {
+        for (int i = 0xFF; i >= 0; i--) {
+            if (structs[i].finished && structs[i].type != 0) {
+                Struct *s = &structs[i];
+                if (s->type == 4) {
+                    structs[s->index1].result = s->result;
+                    structs[s->index1].finished = true;
+                // Memo: the data in the memory is messed up so if we swapped the two else if's below it wouldn't work
+                // Although this doesn't affect the solvability of this problem
+                } else if (structs[s->index2].finished == 1) {
+                    structs[s->index1].result = reverse(s->type, structs[s->index2].result, s->result);
+                    structs[s->index1].finished = true;
+                } else if (structs[s->index1].finished == 1) {
+                    structs[s->index2].result = reverse(s->type, structs[s->index1].result, s->result);
+                    structs[s->index2].finished = true;
+                }
+            }
+        }
+        
+        bool done = true;
+        for (int i = 0; i < 32; i++)
+            done = done && structs[i].finished;
+
+        if (done)
+            break;
+    }
+
+    for (int i = 0; i < 32; i++) {
+        putchar(structs[i].result);
+    }
+}
+```
